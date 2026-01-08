@@ -1,0 +1,16 @@
+- Use hp(), wp(), and isIos helpers for layout & typography instead of static numbers.
+- Use isIos helper instead of inline Platform.OS checks.
+- Also use useCallback for functions.
+- Use useMemo for memoization values.
+- Use FontFamily regular in title and button text
+- Use SafeAreaView from react-native-safe-area-context libraries
+- Take navigation from @react-navigation/native
+- In future i've attaching any ui images in that images mentioned keyboard so don't make a keyboard use system keyboard
+- Use common components like Button, keyboardAvoidScroll, etc..
+- In Scrollview also add these two params: bounces={false} showsVerticalScrollIndicator={false}
+- don't make .md files and don't explain code which you need to do inform to me at that time exaplin that things
+- All Static data should ne inside dataConstants.js files
+- Which make common components then define in the components/index.js for globalize
+- Any adding static text so mention in the laugages files because in our application using multi languages.
+- Use svg icons instead of emoji in anywhere
+- Don't make a .md files
