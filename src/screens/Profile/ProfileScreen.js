@@ -25,6 +25,7 @@ import {
 } from '../../components';
 import { showSuccess, showError } from '../../helper/toast';
 import { authService } from '../../services';
+import { getStoredFCMToken } from '../../services/firebaseServices';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchUserProfile,
@@ -199,6 +200,9 @@ const ProfileScreen = () => {
   const handleSaveProfile = useCallback(
     async updatedProfile => {
       try {
+        // Get FCM token from storage
+        const fcmToken = await getStoredFCMToken();
+
         const result = await dispatch(
           updateUserProfile({
             full_name: updatedProfile.name,
@@ -215,6 +219,7 @@ const ProfileScreen = () => {
               updatedProfile.instagram_show_in_poster || false,
             twitter_show_in_poster:
               updatedProfile.twitter_show_in_poster || false,
+            fcm_token: fcmToken,
           }),
         ).unwrap();
 

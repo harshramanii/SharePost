@@ -69,15 +69,33 @@ export const authService = {
           .maybeSingle();
 
         if (!existingUser) {
+          // Try to get FCM token if available
+          let fcmToken = null;
+          try {
+            const { getStoredFCMToken } = require('./firebaseServices');
+            fcmToken = await getStoredFCMToken();
+          } catch (error) {
+            console.log('Could not retrieve FCM token during signup:', error);
+          }
+
           // User doesn't exist, create profile
-          const { error: profileError } = await supabase.from('users').insert({
+          const insertData = {
             id: data.user.id,
             email: data.user.email,
             username: username,
             full_name: '',
             email_verified: false,
             status: 'active',
-          });
+          };
+
+          // Include FCM token if available
+          if (fcmToken) {
+            insertData.fcm_token = fcmToken;
+          }
+
+          const { error: profileError } = await supabase
+            .from('users')
+            .insert(insertData);
 
           if (profileError) {
             // If duplicate key error, user was created between check and insert
@@ -142,15 +160,28 @@ export const authService = {
           };
         }
 
-        // Update last_login_at if column exists (optional, won't fail if column doesn't exist)
+        // Try to get FCM token if available and update it
+        let fcmToken = null;
         try {
+          const { getStoredFCMToken } = require('./firebaseServices');
+          fcmToken = await getStoredFCMToken();
+        } catch (error) {
+          console.log('Could not retrieve FCM token during signin:', error);
+        }
+
+        // Update last_login_at and FCM token if available
+        try {
+          const updateData = { last_login_at: new Date().toISOString() };
+          if (fcmToken) {
+            updateData.fcm_token = fcmToken;
+          }
           await supabase
             .from('users')
-            .update({ last_login_at: new Date().toISOString() })
+            .update(updateData)
             .eq('id', data.user.id);
         } catch (updateError) {
           // Ignore if column doesn't exist
-          console.log('Could not update last_login_at:', updateError);
+          console.log('Could not update last_login_at or fcm_token:', updateError);
         }
       }
 
@@ -173,6 +204,14 @@ export const authService = {
 
       // Remove token from AsyncStorage
       await authService.removeToken();
+
+      // Remove FCM token from AsyncStorage
+      try {
+        const { removeFCMToken } = require('./firebaseServices');
+        await removeFCMToken();
+      } catch (fcmError) {
+        console.log('Could not remove FCM token:', fcmError);
+      }
 
       return { error: null };
     } catch (error) {
@@ -494,6 +533,18 @@ export const authService = {
         }
       }
 
+      // Get FCM token from AsyncStorage if available
+      let fcmToken = null;
+      try {
+        const { getStoredFCMToken } = require('./firebaseServices');
+        fcmToken = await getStoredFCMToken();
+        if (fcmToken) {
+          console.log('FCM token retrieved from storage for profile update');
+        }
+      } catch (error) {
+        console.log('Could not retrieve FCM token:', error);
+      }
+
       // Map field names to match database schema
       const updateData = {
         full_name: profileData.full_name || profileData.name || '',
@@ -509,6 +560,11 @@ export const authService = {
         twitter_show_in_poster: profileData.twitter_show_in_poster || false,
         updated_at: new Date().toISOString(),
       };
+
+      // Include FCM token if available
+      if (fcmToken) {
+        updateData.fcm_token = fcmToken;
+      }
 
       // Add username if provided
       if (profileData.username) {
@@ -572,6 +628,11 @@ export const authService = {
               status: 'active',
               email_verified: authUser?.email_confirmed_at ? true : false,
             };
+
+            // Include FCM token if available
+            if (fcmToken) {
+              insertData.fcm_token = fcmToken;
+            }
 
             const insertResult = await supabase
               .from('users')

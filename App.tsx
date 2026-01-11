@@ -3,7 +3,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar, View, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -14,6 +14,7 @@ import { ThemeProvider, ThemeContext } from './src/context/ThemeContext';
 import { LanguageProvider } from './src/context/LanguageContext';
 import { store } from './src/store';
 import MainStackNavigator from './src/navigation/Navigation';
+import { requestNotificationPermission } from './src/services/firebaseServices';
 
 const AppContent = () => {
   const { theme, colors } = React.useContext(ThemeContext);
@@ -38,7 +39,8 @@ const AppContent = () => {
           shadowOpacity: 0.25,
           shadowRadius: 3.84,
           elevation: 5,
-        }}>
+        }}
+      >
         <View style={{ flex: 1 }}>
           {text1 && (
             <Text
@@ -47,7 +49,8 @@ const AppContent = () => {
                 fontWeight: 'bold',
                 color: colors.text,
                 marginBottom: 2,
-              }}>
+              }}
+            >
               {text1}
             </Text>
           )}
@@ -77,7 +80,8 @@ const AppContent = () => {
           shadowOpacity: 0.25,
           shadowRadius: 3.84,
           elevation: 5,
-        }}>
+        }}
+      >
         <View style={{ flex: 1 }}>
           {text1 && (
             <Text
@@ -86,7 +90,8 @@ const AppContent = () => {
                 fontWeight: 'bold',
                 color: colors.text,
                 marginBottom: 2,
-              }}>
+              }}
+            >
               {text1}
             </Text>
           )}
@@ -116,7 +121,8 @@ const AppContent = () => {
           shadowOpacity: 0.25,
           shadowRadius: 3.84,
           elevation: 5,
-        }}>
+        }}
+      >
         <View style={{ flex: 1 }}>
           {text1 && (
             <Text
@@ -125,7 +131,8 @@ const AppContent = () => {
                 fontWeight: 'bold',
                 color: colors.text,
                 marginBottom: 2,
-              }}>
+              }}
+            >
               {text1}
             </Text>
           )}
@@ -152,6 +159,15 @@ const AppContent = () => {
 };
 
 function App() {
+  useEffect(() => {
+    // Initialize Firebase services on app start
+    const initFirebase = async () => {
+      await requestNotificationPermission();
+    };
+
+    initFirebase();
+  }, []);
+
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>

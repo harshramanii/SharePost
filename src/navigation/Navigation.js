@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { navigationRef } from './rootNavigation';
+import { logScreenView } from '../services/firebaseServices';
 
 //--- Common
 import Loading from '../screens/Common/Loading';
@@ -26,8 +27,62 @@ import TabNavigator from './TabNavigator';
 const Stack = createStackNavigator();
 
 const MainStackNavigator = () => {
+  const routeNameRef = useRef();
+
+  const getActiveRouteName = state => {
+    if (!state || !state.routes || state.index === undefined) {
+      return null;
+    }
+
+    const route = state.routes[state.index];
+    if (!route) {
+      return null;
+    }
+
+    if (route.state) {
+      // Dive into nested navigators (e.g., TabNavigator)
+      const nestedRouteName = getActiveRouteName(route.state);
+      // Combine parent and nested route names for better tracking
+      if (nestedRouteName) {
+        return `${route.name}_${nestedRouteName}`;
+      }
+    }
+
+    return route.name;
+  };
+
+  const handleNavigationStateChange = async (prevState, currentState) => {
+    if (!currentState) {
+      return;
+    }
+
+    const previousRouteName = routeNameRef.current;
+    const currentRouteName = getActiveRouteName(currentState);
+
+    if (currentRouteName && previousRouteName !== currentRouteName) {
+      // Log screen view to Firebase Analytics
+      await logScreenView(currentRouteName);
+    }
+
+    // Save the current route name for next comparison
+    routeNameRef.current = currentRouteName;
+  };
+
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer
+      ref={navigationRef}
+      onReady={() => {
+        try {
+          const rootState = navigationRef.current?.getRootState();
+          if (rootState) {
+            routeNameRef.current = getActiveRouteName(rootState);
+          }
+        } catch (error) {
+          console.log('Error getting initial route name:', error);
+        }
+      }}
+      onStateChange={handleNavigationStateChange}
+    >
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name={'Loading'} component={Loading} />
         <Stack.Screen name={'Intro'} component={IntroScreen} />
