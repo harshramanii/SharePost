@@ -22,11 +22,14 @@ import {
   LogoutModal,
   DeleteAccountModal,
   ContactSupportModal,
+  SubscriptionModal,
 } from '../../components';
 import { showSuccess, showError } from '../../helper/toast';
-import { authService } from '../../services';
+import { authService, subscriptionService } from '../../services';
 import { getStoredFCMToken } from '../../services/firebaseServices';
 import { useDispatch, useSelector } from 'react-redux';
+import Share from 'react-native-share';
+import { Platform } from 'react-native';
 import {
   fetchUserProfile,
   updateUserProfile,
@@ -47,7 +50,9 @@ const ProfileScreen = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [showContactSupportModal, setShowContactSupportModal] = useState(false);
+  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false);
   const [isGuest, setIsGuest] = useState(false);
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
   const [userProfile, setUserProfile] = useState({
     name: '',
     phone: '',
@@ -133,6 +138,35 @@ const ProfileScreen = () => {
 
   const handleContactSupport = useCallback(() => {
     setShowContactSupportModal(true);
+  }, []);
+
+  const handleSubscriptions = useCallback(() => {
+    setShowSubscriptionModal(true);
+  }, []);
+
+  const handleShareApp = useCallback(async () => {
+    try {
+      // App Store URLs
+      const packageName = 'com.sharepost';
+      const appStoreUrl =
+        Platform.OS === 'ios'
+          ? `https://apps.apple.com/app/id${packageName}` // Replace with actual App Store ID
+          : `https://play.google.com/store/apps/details?id=${packageName}`;
+      
+      const shareOptions = {
+        message: `Check out SharePost app! Download it from: ${appStoreUrl}`,
+        url: appStoreUrl,
+        title: 'Share SharePost App',
+      };
+
+      await Share.open(shareOptions);
+      showSuccess('App shared successfully!');
+    } catch (error) {
+      if (error.message !== 'User did not share') {
+        console.error('Error sharing app:', error);
+        showError('Failed to share app');
+      }
+    }
   }, []);
 
   const handleDeleteAccount = useCallback(() => {
@@ -395,6 +429,18 @@ const ProfileScreen = () => {
               strings.profile.privacy,
               handlePrivacy,
             )}
+            {renderOptionItem(
+              'settings',
+              strings.profile.subscriptions,
+              handleSubscriptions,
+              true,
+              subscriptionStatus?.status === 'active' ? (
+                <View style={styles.subscriptionBadge}>
+                  <Text style={styles.subscriptionBadgeText}>Active</Text>
+                </View>
+              ) : null,
+            )}
+            {renderOptionItem('share', strings.profile.shareApp, handleShareApp)}
             {renderOptionItem('alert', 'Contact Support', handleContactSupport)}
             {!isGuest &&
               renderOptionItem(
@@ -449,6 +495,11 @@ const ProfileScreen = () => {
       <ContactSupportModal
         visible={showContactSupportModal}
         onClose={() => setShowContactSupportModal(false)}
+      />
+
+      <SubscriptionModal
+        visible={showSubscriptionModal}
+        onClose={() => setShowSubscriptionModal(false)}
       />
     </SafeAreaView>
   );
@@ -564,6 +615,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  subscriptionBadge: {
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: wp(3),
+    paddingVertical: hp(0.5),
+    borderRadius: wp(2),
+  },
+  subscriptionBadgeText: {
+    color: '#FFFFFF',
+    fontSize: fontSize(12),
+    fontFamily: fontFamily.bold,
   },
 });
 

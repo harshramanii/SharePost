@@ -15,6 +15,7 @@ import { LanguageProvider } from './src/context/LanguageContext';
 import { store } from './src/store';
 import MainStackNavigator from './src/navigation/Navigation';
 import { requestNotificationPermission } from './src/services/firebaseServices';
+import { subscriptionService } from './src/services/subscriptionService';
 
 const AppContent = () => {
   const { theme, colors } = React.useContext(ThemeContext);
@@ -161,11 +162,25 @@ const AppContent = () => {
 function App() {
   useEffect(() => {
     // Initialize Firebase services on app start
-    const initFirebase = async () => {
+    const initServices = async () => {
       await requestNotificationPermission();
+
+      // Initialize subscription service
+      try {
+        await subscriptionService.initialize();
+        // Check for expired subscriptions periodically
+        await subscriptionService.checkExpiredSubscriptions();
+      } catch (error) {
+        console.log('Subscription service initialization failed:', error);
+      }
     };
 
-    initFirebase();
+    initServices();
+
+    // Cleanup subscription listeners on unmount
+    return () => {
+      subscriptionService.cleanup();
+    };
   }, []);
 
   return (

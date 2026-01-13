@@ -12,6 +12,7 @@ import LogoutModal from './common/LogoutModal';
 import DeleteAccountModal from './common/DeleteAccountModal';
 import ContactSupportModal from './common/ContactSupportModal';
 import CustomizablePostCard from './common/CustomizablePostCard';
+import SubscriptionModal from './common/SubscriptionModal';
 import Input from './common/Input';
 import OTPInput from './common/OTPInput';
 
@@ -29,6 +30,7 @@ export {
   DeleteAccountModal,
   ContactSupportModal,
   CustomizablePostCard,
+  SubscriptionModal,
   Input,
   OTPInput,
 };
