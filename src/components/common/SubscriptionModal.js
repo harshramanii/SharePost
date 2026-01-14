@@ -768,24 +768,6 @@ const SubscriptionModal = ({ visible, onClose }) => {
                       </Text>
                     )}
                   </View>
-                  <TouchableOpacity
-                    onPress={handleRestorePurchases}
-                    style={styles.restoreButton}
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <ActivityIndicator size="small" color={colors.primary} />
-                    ) : (
-                      <Text
-                        style={[
-                          styles.restoreButtonText,
-                          { color: colors.primary },
-                        ]}
-                      >
-                        Restore Purchases
-                      </Text>
-                    )}
-                  </TouchableOpacity>
                 </View>
               ) : (
                 <>

@@ -419,38 +419,41 @@ class SubscriptionService {
         purchaseDateObj,
       );
 
-      // Save subscription to database
-      const { error: dbError } = await supabase
-        .from('user_subscriptions')
-        .upsert(
-          {
-            user_id: user.id,
-            product_id: purchase.productId,
-            transaction_id: purchase.transactionId,
-            platform: Platform.OS,
-            subscription_type: subscriptionType,
-            status: SUBSCRIPTION_STATUS.ACTIVE,
-            purchase_date: purchaseDateObj.toISOString(),
-            expiry_date: expiryDate.toISOString(),
-            original_transaction_id:
-              purchase.originalTransactionIdentifierIOS ||
-              purchase.transactionId,
-            receipt_data: purchase.purchaseToken || purchase.transactionReceipt,
-            auto_renew_enabled: purchase.isAutoRenewing !== false,
-            updated_at: new Date().toISOString(),
-          },
-          {
-            onConflict: 'user_id,product_id',
-          },
-        );
+      // Use database function to handle subscription transfer/creation
+      // This function can bypass RLS to check if subscription exists for another user
+      // and transfer it if needed, or create/update it for the current user
+      const { data: transferResult, error: transferError } = await supabase.rpc(
+        'transfer_subscription',
+        {
+          p_transaction_id: purchase.transactionId,
+          p_new_user_id: user.id,
+          p_product_id: purchase.productId,
+          p_platform: Platform.OS,
+          p_subscription_type: subscriptionType,
+          p_status: SUBSCRIPTION_STATUS.ACTIVE,
+          p_purchase_date: purchaseDateObj.toISOString(),
+          p_expiry_date: expiryDate.toISOString(),
+          p_original_transaction_id:
+            purchase.originalTransactionIdentifierIOS ||
+            purchase.transactionId,
+          p_receipt_data: purchase.purchaseToken || purchase.transactionReceipt,
+          p_auto_renew_enabled: purchase.isAutoRenewing !== false,
+        },
+      );
 
-      if (dbError) {
-        console.error('Error saving subscription to database:', dbError);
-        return { success: false, error: dbError.message };
+      if (transferError) {
+        console.error('Error transferring/creating subscription:', transferError);
+        return { success: false, error: transferError.message };
       }
 
-      console.log('Subscription saved successfully');
-      return { success: true };
+      console.log(
+        '[SubscriptionService] Subscription processed successfully:',
+        transferResult,
+      );
+      return {
+        success: true,
+        transferred: transferResult?.transferred || false,
+      };
     } catch (error) {
       console.error('Error handling purchase success:', error);
       return { success: false, error: error.message };
@@ -877,6 +880,19 @@ class SubscriptionService {
   // Restore purchases
   restorePurchases = async () => {
     try {
+      // Check if user is authenticated
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        return {
+          success: false,
+          error: 'User not authenticated. Please log in to restore purchases.',
+        };
+      }
+
       if (!this.isInitialized) {
         await this.initialize();
       }
@@ -890,7 +906,7 @@ class SubscriptionService {
       }
 
       const purchases = await iapModule.getAvailablePurchases();
-      console.log('Available purchases:', purchases);
+      console.log('[SubscriptionService] Available purchases from store:', purchases);
 
       if (!purchases || purchases.length === 0) {
         return {
@@ -902,26 +918,40 @@ class SubscriptionService {
 
       // Process each purchase
       let restoredCount = 0;
+      let transferredCount = 0;
       for (const purchase of purchases) {
         const result = await this.handlePurchaseSuccess(purchase);
         if (result.success) {
           restoredCount++;
+          if (result.transferred) {
+            transferredCount++;
+          }
         }
       }
 
       await logEvent('subscription_restored', {
         restored_count: restoredCount,
+        transferred_count: transferredCount,
         platform: Platform.OS,
       });
+
+      let message = '';
+      if (restoredCount > 0) {
+        if (transferredCount > 0) {
+          message = `Restored ${restoredCount} purchase(s). ${transferredCount} subscription(s) transferred to your account.`;
+        } else {
+          message = `Restored ${restoredCount} purchase(s)`;
+        }
+      } else {
+        message = 'No purchases restored';
+      }
 
       return {
         success: true,
         restored: restoredCount > 0,
         restoredCount,
-        message:
-          restoredCount > 0
-            ? `Restored ${restoredCount} purchase(s)`
-            : 'No purchases restored',
+        transferredCount,
+        message,
       };
     } catch (error) {
       console.error('Error restoring purchases:', error);
