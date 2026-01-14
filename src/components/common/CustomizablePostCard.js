@@ -1,4 +1,10 @@
-import React, { useCallback, useRef, useMemo } from 'react';
+import React, {
+  useCallback,
+  useRef,
+  useMemo,
+  useState,
+  useEffect,
+} from 'react';
 import {
   View,
   Text,
@@ -23,7 +29,9 @@ import { fontFamily, fontSize } from '../../helper/utils';
 import { useTheme } from '../../hooks/useTheme';
 import { useLanguage } from '../../hooks/useLanguage';
 import { showSuccess, showError } from '../../helper/toast';
+import { subscriptionService } from '../../services';
 import Icon from './Icon';
+import DownloadShareModal from './DownloadShareModal';
 
 const CustomizablePostCard = ({
   backgroundImage,
@@ -40,6 +48,34 @@ const CustomizablePostCard = ({
   const { colors } = useTheme();
   const { strings } = useLanguage();
   const { profile: userProfile } = useSelector(state => state.user);
+  const [showDownloadShareModal, setShowDownloadShareModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null); // 'download' or 'share'
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [checkingSubscription, setCheckingSubscription] = useState(false);
+
+  // Check subscription status on mount
+  useEffect(() => {
+    checkSubscriptionStatus();
+  }, []);
+
+  const checkSubscriptionStatus = useCallback(async () => {
+    try {
+      setCheckingSubscription(true);
+      const hasSubscription = await subscriptionService.hasActiveSubscription();
+      setHasActiveSubscription(hasSubscription);
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+      setHasActiveSubscription(false);
+    } finally {
+      setCheckingSubscription(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showDownloadShareModal) {
+      checkSubscriptionStatus();
+    }
+  }, [showDownloadShareModal, checkSubscriptionStatus]);
 
   const requestStoragePermission = useCallback(async () => {
     if (Platform.OS === 'android') {
@@ -124,13 +160,40 @@ const CustomizablePostCard = ({
     }
   }, [onShare]);
 
+  const handleModalClose = useCallback(() => {
+    setShowDownloadShareModal(false);
+    setPendingAction(null);
+  }, []);
+
+  const handleAfterViewAds = useCallback(() => {
+    if (pendingAction === 'download') {
+      captureAndDownload();
+      return;
+    }
+    if (pendingAction === 'share') {
+      captureAndShare();
+    }
+  }, [pendingAction, captureAndDownload, captureAndShare]);
+
   const handleDownload = useCallback(() => {
-    captureAndDownload();
-  }, [captureAndDownload]);
+    if (checkingSubscription) return;
+    if (hasActiveSubscription) {
+      captureAndDownload();
+      return;
+    }
+    setPendingAction('download');
+    setShowDownloadShareModal(true);
+  }, [checkingSubscription, hasActiveSubscription, captureAndDownload]);
 
   const handleShare = useCallback(() => {
-    captureAndShare();
-  }, [captureAndShare]);
+    if (checkingSubscription) return;
+    if (hasActiveSubscription) {
+      captureAndShare();
+      return;
+    }
+    setPendingAction('share');
+    setShowDownloadShareModal(true);
+  }, [checkingSubscription, hasActiveSubscription, captureAndShare]);
 
   const handleSocialLink = useCallback(async (url, type) => {
     if (!url || url.trim() === '') return;
@@ -511,6 +574,13 @@ const CustomizablePostCard = ({
           </Text>
         </TouchableOpacity>
       </View>
+
+      <DownloadShareModal
+        visible={showDownloadShareModal}
+        onClose={handleModalClose}
+        actionType={pendingAction || 'download'}
+        onAdWatched={handleAfterViewAds}
+      />
     </View>
   );
 };

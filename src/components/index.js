@@ -13,6 +13,8 @@ import DeleteAccountModal from './common/DeleteAccountModal';
 import ContactSupportModal from './common/ContactSupportModal';
 import CustomizablePostCard from './common/CustomizablePostCard';
 import SubscriptionModal from './common/SubscriptionModal';
+import DownloadShareModal from './common/DownloadShareModal';
+import AdBanner from './common/AdBanner';
 import Input from './common/Input';
 import OTPInput from './common/OTPInput';
 
@@ -31,6 +33,8 @@ export {
   ContactSupportModal,
   CustomizablePostCard,
   SubscriptionModal,
+  DownloadShareModal,
+  AdBanner,
   Input,
   OTPInput,
 };

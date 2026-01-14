@@ -16,17 +16,32 @@ import { useTheme } from '../../hooks/useTheme';
 import { useLanguage } from '../../hooks/useLanguage';
 import { languages } from '../../helper/dataConstants';
 import { ONBOARDING_COMPLETED } from '../../helper/constData';
-import { Button, Icon } from '../../components';
+import { Button, Icon, AdBanner } from '../../components';
+import { subscriptionService } from '../../services';
 
 const LanguageScreen = () => {
   const navigation = useNavigation();
   const { colors } = useTheme();
   const { language, setLanguage, strings } = useLanguage();
   const [selectedLanguage, setSelectedLanguage] = useState(language);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
 
   useEffect(() => {
     setSelectedLanguage(language);
   }, [language]);
+
+  useEffect(() => {
+    const checkSubscription = async () => {
+      try {
+        const hasSubscription = await subscriptionService.hasActiveSubscription();
+        setHasActiveSubscription(hasSubscription);
+      } catch (error) {
+        console.error('Error checking subscription:', error);
+        setHasActiveSubscription(false);
+      }
+    };
+    checkSubscription();
+  }, []);
 
   const selectedLanguageData = useMemo(
     () => languages.find(lang => lang.code === selectedLanguage),
@@ -116,38 +131,46 @@ const LanguageScreen = () => {
       style={[styles.container, { backgroundColor: colors.background }]}
       edges={['top', 'bottom']}
     >
-      <View style={styles.header}>
-        <View style={styles.iconHeaderContainer}>
-          <View
-            style={[styles.iconContainer, { backgroundColor: colors.surface }]}
-          >
-            <Icon name="language" size={wp(12)} color={colors.primary} />
+      <View style={hasActiveSubscription ? styles.contentAreaFull : styles.contentArea}>
+        <View style={styles.header}>
+          <View style={styles.iconHeaderContainer}>
+            <View
+              style={[styles.iconContainer, { backgroundColor: colors.surface }]}
+            >
+              <Icon name="language" size={wp(12)} color={colors.primary} />
+            </View>
           </View>
+          <Text style={[styles.title, { color: colors.primary }]}>
+            {strings.language.title}
+          </Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+            {strings.language.subtitle}
+          </Text>
         </View>
-        <Text style={[styles.title, { color: colors.primary }]}>
-          {strings.language.title}
-        </Text>
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          {strings.language.subtitle}
-        </Text>
+
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+        >
+          {languages.map(language => renderLanguageItem(language))}
+        </ScrollView>
+
+        <View style={styles.footer}>
+          <Button
+            title={strings.language.continue}
+            onPress={handleContinue}
+            style={styles.button}
+          />
+        </View>
       </View>
 
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-      >
-        {languages.map(language => renderLanguageItem(language))}
-      </ScrollView>
-
-      <View style={styles.footer}>
-        <Button
-          title={strings.language.continue}
-          onPress={handleContinue}
-          style={styles.button}
-        />
-      </View>
+      {!hasActiveSubscription && (
+        <View style={styles.adArea}>
+          <AdBanner style={styles.adBanner} />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -155,6 +178,19 @@ const LanguageScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  contentArea: {
+    flex: 7,
+  },
+  contentAreaFull: {
+    flex: 1,
+  },
+  adArea: {
+    flex: 3,
+    justifyContent: 'center',
+  },
+  adBanner: {
+    borderTopWidth: 0,
   },
   header: {
     paddingHorizontal: wp(5),

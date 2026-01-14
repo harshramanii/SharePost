@@ -23,7 +23,7 @@ import { hp, wp } from '../../helper/constants';
 import { fontFamily, fontSize } from '../../helper/utils';
 import { useTheme } from '../../hooks/useTheme';
 import { useLanguage } from '../../hooks/useLanguage';
-import { FilterModal, Icon, PostSlider } from '../../components';
+import { AdBanner, FilterModal, Icon, PostSlider } from '../../components';
 import { postService, categoryService } from '../../services';
 import { fetchUserProfile } from '../../store/slices/userSlice';
 
@@ -323,6 +323,9 @@ const HomeScreen = () => {
               onEdit={handleEdit}
               onShare={handleShare}
             />
+            <View style={styles.bannerContainer}>
+              <AdBanner />
+            </View>
           </>
         ) : (
           <View style={styles.emptyContainer}>
@@ -477,6 +480,11 @@ const styles = StyleSheet.create({
   clearSearchText: {
     fontSize: fontSize(16),
     fontFamily: fontFamily.bold,
+  },
+  bannerContainer: {
+    paddingHorizontal: wp(5),
+    paddingTop: hp(2),
+    paddingBottom: hp(4),
   },
 });
 

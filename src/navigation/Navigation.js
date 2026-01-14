@@ -13,10 +13,14 @@ import IntroScreen from '../screens/Intro/IntroScreen';
 
 //--- Language
 import LanguageScreen from '../screens/Language/LanguageScreen';
+import FaqScreen from '../screens/Static/FaqScreen';
+import TermsScreen from '../screens/Static/TermsScreen';
+import PrivacyPolicyScreen from '../screens/Static/PrivacyPolicyScreen';
 
 //--- Auth
 import LoginScreen from '../screens/Auth/LoginScreen';
 import SignUpScreen from '../screens/Auth/SignUpScreen';
+import ForgotPasswordScreen from '../screens/Auth/ForgotPasswordScreen';
 import OTPVerificationScreen from '../screens/Auth/OTPVerificationScreen';
 import PersonalDetailsScreen from '../screens/Auth/PersonalDetailsScreen';
 
@@ -89,6 +93,7 @@ const MainStackNavigator = () => {
         <Stack.Screen name={'Language'} component={LanguageScreen} />
         <Stack.Screen name={'Login'} component={LoginScreen} />
         <Stack.Screen name={'SignUp'} component={SignUpScreen} />
+        <Stack.Screen name={'ForgotPassword'} component={ForgotPasswordScreen} />
         <Stack.Screen
           name={'OTPVerification'}
           component={OTPVerificationScreen}
@@ -97,6 +102,9 @@ const MainStackNavigator = () => {
           name={'PersonalDetails'}
           component={PersonalDetailsScreen}
         />
+        <Stack.Screen name={'Faq'} component={FaqScreen} />
+        <Stack.Screen name={'Terms'} component={TermsScreen} />
+        <Stack.Screen name={'PrivacyPolicy'} component={PrivacyPolicyScreen} />
         <Stack.Screen name={'Main'} component={TabNavigator} />
         <Stack.Screen name={'HomeTabs'} component={TabNavigator} />
       </Stack.Navigator>

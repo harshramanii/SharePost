@@ -16,6 +16,7 @@ import { store } from './src/store';
 import MainStackNavigator from './src/navigation/Navigation';
 import { requestNotificationPermission } from './src/services/firebaseServices';
 import { subscriptionService } from './src/services/subscriptionService';
+import { adService } from './src/services/adService';
 
 const AppContent = () => {
   const { theme, colors } = React.useContext(ThemeContext);
@@ -173,11 +174,18 @@ function App() {
       } catch (error) {
         console.log('Subscription service initialization failed:', error);
       }
+
+      // Initialize ad service
+      try {
+        await adService.initialize();
+      } catch (error) {
+        console.log('Ad service initialization failed:', error);
+      }
     };
 
     initServices();
 
-    // Cleanup subscription listeners on unmount
+    // Cleanup subscription listeners and ad service on unmount
     return () => {
       subscriptionService.cleanup();
     };

@@ -16,8 +16,8 @@ import { hp, wp } from '../../helper/constants';
 import { fontFamily, fontSize } from '../../helper/utils';
 import { useTheme } from '../../hooks/useTheme';
 import { useLanguage } from '../../hooks/useLanguage';
-import { Button, Icon } from '../../components';
-import { contactSupportService } from '../../services';
+import { Button, Icon, AdBanner } from '../../components';
+import { contactSupportService, subscriptionService } from '../../services';
 import { showSuccess, showError } from '../../helper/toast';
 import { useSelector } from 'react-redux';
 
@@ -33,6 +33,7 @@ const ContactSupportModal = ({ visible, onClose }) => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
 
   // Set user email when modal opens
   useEffect(() => {
@@ -44,6 +45,21 @@ const ContactSupportModal = ({ visible, onClose }) => {
       setErrors({});
     }
   }, [visible, userProfile]);
+
+  useEffect(() => {
+    const checkSubscription = async () => {
+      try {
+        const hasSubscription = await subscriptionService.hasActiveSubscription();
+        setHasActiveSubscription(hasSubscription);
+      } catch (error) {
+        console.error('Error checking subscription:', error);
+        setHasActiveSubscription(false);
+      }
+    };
+    if (visible) {
+      checkSubscription();
+    }
+  }, [visible]);
 
   const handleChange = useCallback(
     (field, value) => {
@@ -175,13 +191,15 @@ const ContactSupportModal = ({ visible, onClose }) => {
               </TouchableOpacity>
             </View>
 
-            <ScrollView
-              style={styles.scrollView}
-              contentContainerStyle={styles.scrollContent}
-              bounces={false}
-              showsVerticalScrollIndicator={false}
-            >
-              <View style={styles.formContainer}>
+            <View style={styles.modalBody}>
+              <View style={hasActiveSubscription ? styles.contentAreaFull : styles.contentArea}>
+                <ScrollView
+                  style={styles.scrollView}
+                  contentContainerStyle={styles.scrollContent}
+                  bounces={false}
+                  showsVerticalScrollIndicator={false}
+                >
+                  <View style={styles.formContainer}>
                 <View style={styles.inputGroup}>
                   <Text style={[styles.label, { color: colors.text }]}>
                     Title *
@@ -303,8 +321,16 @@ const ContactSupportModal = ({ visible, onClose }) => {
                     ))}
                   </View>
                 </View>
+                  </View>
+                </ScrollView>
               </View>
-            </ScrollView>
+
+              {!hasActiveSubscription && (
+                <View style={styles.adArea}>
+                  <AdBanner style={styles.adBanner} />
+                </View>
+              )}
+            </View>
 
             <View
               style={[
@@ -350,6 +376,22 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp(8),
     borderTopRightRadius: wp(8),
     height: hp(90),
+  },
+  modalBody: {
+    flex: 1,
+  },
+  contentArea: {
+    flex: 7,
+  },
+  contentAreaFull: {
+    flex: 1,
+  },
+  adArea: {
+    flex: 3,
+    justifyContent: 'center',
+  },
+  adBanner: {
+    borderTopWidth: 0,
   },
   modalHeader: {
     flexDirection: 'row',

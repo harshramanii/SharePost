@@ -16,7 +16,7 @@ import { hp, wp, isIos } from '../../helper/constants';
 import { fontFamily, fontSize } from '../../helper/utils';
 import { useTheme } from '../../hooks/useTheme';
 import { useLanguage } from '../../hooks/useLanguage';
-import { CustomizablePostCard, Icon, Button } from '../../components';
+import { CustomizablePostCard, Icon, Button, AdBanner } from '../../components';
 
 const CreateScreen = () => {
   const { colors } = useTheme();
@@ -352,6 +352,10 @@ const CreateScreen = () => {
             </>
           )}
         </View>
+
+        <View style={styles.bannerContainer}>
+          <AdBanner />
+        </View>
       </ScrollView>
 
       {/* Image Picker Modal for Android */}
@@ -623,6 +627,11 @@ const styles = StyleSheet.create({
   modalButtonText: {
     fontSize: fontSize(14),
     fontFamily: fontFamily.regular,
+  },
+  bannerContainer: {
+    paddingHorizontal: wp(5),
+    paddingTop: hp(2),
+    paddingBottom: hp(4),
   },
   colorGrid: {
     flexDirection: 'row',

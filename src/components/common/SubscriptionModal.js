@@ -189,8 +189,8 @@ const SubscriptionModal = ({ visible, onClose }) => {
         product.displayName ||
         product.nameAndroid ||
         (isMonthly
-          ? strings.subscription.monthly
-          : strings.subscription.yearly);
+          ? strings?.subscription?.monthly || 'Monthly'
+          : strings?.subscription?.yearly || 'Yearly');
 
       // Calculate price per month for yearly plans
       const numericPrice = parseFloat(price?.replace(/[^0-9.]/g, '') || '0');
@@ -206,11 +206,13 @@ const SubscriptionModal = ({ visible, onClose }) => {
         formattedPrice: price || `${numericPrice} ${currency}`,
         pricePerMonth: pricePerMonth,
         duration: isMonthly
-          ? strings.subscription.month
-          : strings.subscription.year,
+          ? strings?.subscription?.month || 'Month'
+          : strings?.subscription?.year || 'Year',
         description: isMonthly
-          ? strings.subscription.monthlyDescription
-          : strings.subscription.yearlyDescription,
+          ? strings?.subscription?.monthlyDescription ||
+            'Access to premium features for one month'
+          : strings?.subscription?.yearlyDescription ||
+            'Access to premium features for one year at a discounted rate',
         savings: isYearly ? 'Save 50%' : null,
         product: product,
         trialInfo: trialInfo,
@@ -253,11 +255,12 @@ const SubscriptionModal = ({ visible, onClose }) => {
 
   const benefits = useMemo(
     () => [
-      strings.subscription.benefit1,
-      strings.subscription.benefit2,
-      strings.subscription.benefit3,
-      strings.subscription.benefit4,
-      strings.subscription.benefit5,
+      strings?.subscription?.benefit1 || 'Unlimited post creation',
+      strings?.subscription?.benefit2 ||
+        'Access to all premium themes and backgrounds',
+      strings?.subscription?.benefit3 || 'High-quality image downloads',
+      strings?.subscription?.benefit4 || 'Priority customer support',
+      strings?.subscription?.benefit5 || 'Ad-free experience',
     ],
     [strings],
   );
@@ -369,7 +372,7 @@ const SubscriptionModal = ({ visible, onClose }) => {
               style={[styles.modalHeader, { borderBottomColor: colors.border }]}
             >
               <Text style={[styles.modalTitle, { color: colors.text }]}>
-                {strings.subscription.title}
+                {strings?.subscription?.title || 'Choose Your Plan'}
               </Text>
               <TouchableOpacity
                 onPress={onClose}
@@ -425,7 +428,7 @@ const SubscriptionModal = ({ visible, onClose }) => {
                       style={styles.statusIcon}
                     />
                     <Text style={[styles.statusTitle, { color: colors.text }]}>
-                      {strings.subscription.activeSubscription ||
+                      {strings?.subscription?.activeSubscription ||
                         'Active Subscription'}
                     </Text>
                     <Text
@@ -436,8 +439,8 @@ const SubscriptionModal = ({ visible, onClose }) => {
                     >
                       {subscriptionStatus.subscription.subscription_type ===
                       'monthly'
-                        ? strings.subscription.monthly
-                        : strings.subscription.yearly}{' '}
+                        ? strings?.subscription?.monthly || 'Monthly'
+                        : strings?.subscription?.yearly || 'Yearly'}{' '}
                       Plan
                     </Text>
                     {subscriptionStatus.subscription.expiry_date && (
@@ -448,7 +451,7 @@ const SubscriptionModal = ({ visible, onClose }) => {
                             { color: colors.textSecondary },
                           ]}
                         >
-                          {strings.subscription.expiresOn || 'Expires on'}:
+                          {strings?.subscription?.expiresOn || 'Expires on'}:
                         </Text>
                         <Text
                           style={[styles.statusValue, { color: colors.text }]}
@@ -476,7 +479,7 @@ const SubscriptionModal = ({ visible, onClose }) => {
                             { color: colors.primary },
                           ]}
                         >
-                          {strings.subscription.autoRenew ||
+                          {strings?.subscription?.autoRenew ||
                             'Auto-renew enabled'}
                         </Text>
                       </View>
@@ -488,7 +491,8 @@ const SubscriptionModal = ({ visible, onClose }) => {
                     <Text
                       style={[styles.benefitsTitle, { color: colors.text }]}
                     >
-                      {strings.subscription.benefitsTitle}
+                      {strings?.subscription?.benefitsTitle ||
+                        'Premium Features'}
                     </Text>
                     {benefits.map((benefit, index) => (
                       <View key={index} style={styles.benefitItem}>
@@ -652,7 +656,9 @@ const SubscriptionModal = ({ visible, onClose }) => {
                             ]}
                           >
                             {currentPlan.pricePerMonth} {currentPlan.currency} /{' '}
-                            {strings.subscription.month.toLowerCase()}
+                            {(
+                              strings?.subscription?.month || 'Month'
+                            ).toLowerCase()}
                           </Text>
                         )}
 
@@ -684,7 +690,8 @@ const SubscriptionModal = ({ visible, onClose }) => {
                     <Text
                       style={[styles.benefitsTitle, { color: colors.text }]}
                     >
-                      {strings.subscription.benefitsTitle}
+                      {strings?.subscription?.benefitsTitle ||
+                        'Premium Features'}
                     </Text>
                     {benefits.map((benefit, index) => (
                       <View key={index} style={styles.benefitItem}>
@@ -726,7 +733,7 @@ const SubscriptionModal = ({ visible, onClose }) => {
                         { color: colors.text },
                       ]}
                     >
-                      {strings.subscription.activeSubscription ||
+                      {strings?.subscription?.activeSubscription ||
                         'Active Subscription'}
                     </Text>
                     <Text
@@ -737,8 +744,8 @@ const SubscriptionModal = ({ visible, onClose }) => {
                     >
                       {subscriptionStatus.subscription.subscription_type ===
                       'monthly'
-                        ? strings.subscription.monthly
-                        : strings.subscription.yearly}
+                        ? strings?.subscription?.monthly || 'Monthly'
+                        : strings?.subscription?.yearly || 'Yearly'}
                     </Text>
                     {subscriptionStatus.subscription.expiry_date && (
                       <Text
@@ -747,7 +754,7 @@ const SubscriptionModal = ({ visible, onClose }) => {
                           { color: colors.textSecondary },
                         ]}
                       >
-                        {strings.subscription.expiresOn || 'Expires on'}:{' '}
+                        {strings?.subscription?.expiresOn || 'Expires on'}:{' '}
                         {new Date(
                           subscriptionStatus.subscription.expiry_date,
                         ).toLocaleDateString('en-US', {
@@ -764,7 +771,8 @@ const SubscriptionModal = ({ visible, onClose }) => {
                           { color: colors.primary },
                         ]}
                       >
-                        {strings.subscription.autoRenew || 'Auto-renew enabled'}
+                        {strings?.subscription?.autoRenew ||
+                          'Auto-renew enabled'}
                       </Text>
                     )}
                   </View>
@@ -776,7 +784,8 @@ const SubscriptionModal = ({ visible, onClose }) => {
                       title={
                         purchasing
                           ? 'Processing...'
-                          : strings.subscription.subscribeNow
+                          : strings?.subscription?.subscribeNow ||
+                            'Subscribe Now'
                       }
                       onPress={handleSubscribe}
                       style={styles.subscribeButton}

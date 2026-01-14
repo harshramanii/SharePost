@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import CustomTabBar from '../components/common/CustomTabBar';
@@ -14,6 +14,27 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   const { strings } = useLanguage();
 
+  const homeOptions = useMemo(
+    () => ({
+      tabBarLabel: strings?.home?.title || 'Home',
+    }),
+    [strings],
+  );
+
+  const createOptions = useMemo(
+    () => ({
+      tabBarLabel: strings?.create?.title || 'Create',
+    }),
+    [strings],
+  );
+
+  const profileOptions = useMemo(
+    () => ({
+      tabBarLabel: strings?.profile?.title || 'Profile',
+    }),
+    [strings],
+  );
+
   return (
     <Tab.Navigator
       tabBar={props => <CustomTabBar {...props} />}
@@ -21,27 +42,9 @@ const TabNavigator = () => {
         headerShown: false,
       }}
     >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarLabel: strings.home.title,
-        }}
-      />
-      <Tab.Screen
-        name="Create"
-        component={CreateScreen}
-        options={{
-          tabBarLabel: strings.create.title,
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarLabel: strings.profile.title,
-        }}
-      />
+      <Tab.Screen name="Home" component={HomeScreen} options={homeOptions} />
+      <Tab.Screen name="Create" component={CreateScreen} options={createOptions} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={profileOptions} />
     </Tab.Navigator>
   );
 };

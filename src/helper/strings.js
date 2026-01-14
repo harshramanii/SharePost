@@ -114,6 +114,18 @@ export const strings = {
       saveSuccess: 'Profile updated successfully',
       saveError: 'Failed to update profile',
     },
+    downloadShare: {
+      title: 'Unlock Premium Features',
+      description:
+        'To download/share posts, please choose one of the following options:',
+      viewAds: 'View Ads',
+      viewAdsDescription: 'Watch a short ad to unlock this feature',
+      purchaseSubscription: 'Purchase Subscription',
+      purchaseDescription: 'Get unlimited downloads and shares',
+      download: 'Download',
+      share: 'Share',
+      loadingAd: 'Loading Ad...',
+    },
     subscription: {
       title: 'Choose Your Plan',
       monthly: 'Monthly',
@@ -121,7 +133,8 @@ export const strings = {
       month: 'Month',
       year: 'Year',
       monthlyDescription: 'Access to premium features for one month',
-      yearlyDescription: 'Access to premium features for one year at a discounted rate',
+      yearlyDescription:
+        'Access to premium features for one year at a discounted rate',
       benefitsTitle: 'Premium Features',
       benefit1: 'Unlimited post creation',
       benefit2: 'Access to all premium themes and backgrounds',
@@ -165,6 +178,15 @@ export const strings = {
       signUpError: 'Sign up failed',
       otpSuccess: 'OTP verified successfully',
       otpError: 'OTP verification failed',
+      resetPasswordDescription:
+        "Enter your email address and we'll send you a link to reset your password.",
+      sendResetLink: 'Send Reset Link',
+      resetPasswordEmailSent: 'Email Sent!',
+      resetPasswordCheckEmail:
+        'Please check your email for password reset instructions. The link will expire in 1 hour.',
+      resetPasswordError: 'Failed to send reset email',
+      rememberPassword: 'Remember your password?',
+      backToLogin: 'Back to Login',
     },
   },
   hi: {
@@ -317,6 +339,15 @@ export const strings = {
       signUpError: 'साइन अप विफल',
       otpSuccess: 'OTP सफलतापूर्वक सत्यापित',
       otpError: 'OTP सत्यापन विफल',
+      resetPasswordDescription:
+        'अपना ईमेल पता दर्ज करें और हम आपको पासवर्ड रीसेट करने के लिए एक लिंक भेजेंगे।',
+      sendResetLink: 'रीसेट लिंक भेजें',
+      resetPasswordEmailSent: 'ईमेल भेजा गया!',
+      resetPasswordCheckEmail:
+        'कृपया पासवर्ड रीसेट निर्देशों के लिए अपना ईमेल जांचें। लिंक 1 घंटे में समाप्त हो जाएगा।',
+      resetPasswordError: 'रीसेट ईमेल भेजने में विफल',
+      rememberPassword: 'अपना पासवर्ड याद है?',
+      backToLogin: 'लॉगिन पर वापस जाएं',
     },
   },
   gu: {
@@ -450,6 +481,15 @@ export const strings = {
       signUpError: 'સાઇન અપ નિષ્ફળ',
       otpSuccess: 'OTP સફળતાપૂર્વક ચકાસાયું',
       otpError: 'OTP ચકાસણી નિષ્ફળ',
+      resetPasswordDescription:
+        'તમારું ઇમેઇલ સરનામું દાખલ કરો અને અમે તમને તમારો પાસવર્ડ રીસેટ કરવા માટે એક લિંક મોકલીશું.',
+      sendResetLink: 'રીસેટ લિંક મોકલો',
+      resetPasswordEmailSent: 'ઇમેઇલ મોકલ્યો!',
+      resetPasswordCheckEmail:
+        'કૃપા કરીને પાસવર્ડ રીસેટ સૂચનાઓ માટે તમારું ઇમેઇલ તપાસો. લિંક 1 કલાકમાં સમાપ્ત થશે.',
+      resetPasswordError: 'રીસેટ ઇમેઇલ મોકલવામાં અસફળ',
+      rememberPassword: 'તમારો પાસવર્ડ યાદ છે?',
+      backToLogin: 'લૉગિન પર પાછા જાઓ',
     },
   },
   mr: {
@@ -583,6 +623,15 @@ export const strings = {
       signUpError: 'साइन अप अयशस्वी',
       otpSuccess: 'OTP यशस्वीरित्या सत्यापित केले',
       otpError: 'OTP सत्यापन अयशस्वी',
+      resetPasswordDescription:
+        'अपना ईमेल पता दर्ज करें और हम आपको पासवर्ड रीसेट करने के लिए एक लिंक भेजेंगे।',
+      sendResetLink: 'रीसेट लिंक भेजें',
+      resetPasswordEmailSent: 'ईमेल भेजा गया!',
+      resetPasswordCheckEmail:
+        'कृपया पासवर्ड रीसेट निर्देशों के लिए अपना ईमेल जांचें। लिंक 1 घंटे में समाप्त हो जाएगा।',
+      resetPasswordError: 'रीसेट ईमेल भेजने में विफल',
+      rememberPassword: 'अपना पासवर्ड याद है?',
+      backToLogin: 'लॉगिन पर वापस जाएं',
     },
   },
   ta: {
@@ -718,6 +767,15 @@ export const strings = {
       signUpError: 'பதிவு தோல்வி',
       otpSuccess: 'OTP வெற்றிகரமாக சரிபார்க்கப்பட்டது',
       otpError: 'OTP சரிபார்ப்பு தோல்வி',
+      resetPasswordDescription:
+        'உங்கள் மின்னஞ்சல் முகவரியை உள்ளிடவும், உங்கள் கடவுச்சொல்லை மீட்டமைக்க ஒரு இணைப்பை அனுப்புவோம்.',
+      sendResetLink: 'மீட்டமைப்பு இணைப்பை அனுப்பவும்',
+      resetPasswordEmailSent: 'மின்னஞ்சல் அனுப்பப்பட்டது!',
+      resetPasswordCheckEmail:
+        'கடவுச்சொல் மீட்டமைப்பு வழிமுறைகளுக்காக உங்கள் மின்னஞ்சலை சரிபார்க்கவும். இணைப்பு 1 மணி நேரத்தில் காலாவதியாகும்.',
+      resetPasswordError: 'மீட்டமைப்பு மின்னஞ்சலை அனுப்ப முடியவில்லை',
+      rememberPassword: 'உங்கள் கடவுச்சொல் நினைவிருக்கிறதா?',
+      backToLogin: 'உள்நுழைவுக்குத் திரும்பு',
     },
   },
   te: {
@@ -853,6 +911,15 @@ export const strings = {
       signUpError: 'సైన్ అప్ విఫలమైంది',
       otpSuccess: 'OTP విజయవంతంగా ధృవీకరించబడింది',
       otpError: 'OTP ధృవీకరణ విఫలమైంది',
+      resetPasswordDescription:
+        'మీ ఇమెయిల్ చిరునామాను నమోదు చేయండి మరియు మేము మీ పాస్వర్డ్ను రీసెట్ చేయడానికి లింక్‌ను పంపుతాము.',
+      sendResetLink: 'రీసెట్ లింక్ పంపండి',
+      resetPasswordEmailSent: 'ఇమెయిల్ పంపబడింది!',
+      resetPasswordCheckEmail:
+        'దయచేసి పాస్వర్డ్ రీసెట్ సూచనల కోసం మీ ఇమెయిల్‌ను తనిఖీ చేయండి. లింక్ 1 గంటలో గడువు ముగుస్తుంది.',
+      resetPasswordError: 'రీసెట్ ఇమెయిల్ పంపడంలో విఫలమైంది',
+      rememberPassword: 'మీ పాస్వర్డ్ గుర్తుందా?',
+      backToLogin: 'లాగిన్‌కు తిరిగి వెళ్ళండి',
     },
   },
   kn: {
@@ -988,6 +1055,15 @@ export const strings = {
       signUpError: 'ಸೈನ್ ಅಪ್ ವಿಫಲವಾಗಿದೆ',
       otpSuccess: 'OTP ಯಶಸ್ವಿಯಾಗಿ ಪರಿಶೀಲಿಸಲಾಗಿದೆ',
       otpError: 'OTP ಪರಿಶೀಲನೆ ವಿಫಲವಾಗಿದೆ',
+      resetPasswordDescription:
+        'ನಿಮ್ಮ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ ಮತ್ತು ನಾವು ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ಅನ್ನು ಮರುಹೊಂದಿಸಲು ಲಿಂಕ್ ಅನ್ನು ಕಳುಹಿಸುತ್ತೇವೆ.',
+      sendResetLink: 'ಮರುಹೊಂದಿಸಿ ಲಿಂಕ್ ಕಳುಹಿಸಿ',
+      resetPasswordEmailSent: 'ಇಮೇಲ್ ಕಳುಹಿಸಲಾಗಿದೆ!',
+      resetPasswordCheckEmail:
+        'ದಯವಿಟ್ಟು ಪಾಸ್ವರ್ಡ್ ಮರುಹೊಂದಿಸುವ ಸೂಚನೆಗಳಿಗಾಗಿ ನಿಮ್ಮ ಇಮೇಲ್ ಅನ್ನು ಪರಿಶೀಲಿಸಿ. ಲಿಂಕ್ 1 ಗಂಟೆಯಲ್ಲಿ ಮುಕ್ತಾಯಗೊಳ್ಳುತ್ತದೆ.',
+      resetPasswordError: 'ಮರುಹೊಂದಿಸಿ ಇಮೇಲ್ ಕಳುಹಿಸಲು ವಿಫಲವಾಗಿದೆ',
+      rememberPassword: 'ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ನೆನಪಿದೆಯೇ?',
+      backToLogin: 'ಲಾಗಿನ್‌ಗೆ ಹಿಂತಿರುಗಿ',
     },
   },
   ml: {
@@ -1123,6 +1199,15 @@ export const strings = {
       signUpError: 'സൈൻ അപ്പ് പരാജയപ്പെട്ടു',
       otpSuccess: 'OTP വിജയകരമായി പരിശോധിച്ചു',
       otpError: 'OTP പരിശോധന പരാജയപ്പെട്ടു',
+      resetPasswordDescription:
+        'നിങ്ങളുടെ ഇമെയിൽ വിലാസം നൽകുക, ഞങ്ങൾ നിങ്ങളുടെ പാസ്‌വേഡ് റീസെറ്റ് ചെയ്യുന്നതിന് ഒരു ലിങ്ക് അയയ്ക്കും.',
+      sendResetLink: 'റീസെറ്റ് ലിങ്ക് അയയ്ക്കുക',
+      resetPasswordEmailSent: 'ഇമെയിൽ അയച്ചു!',
+      resetPasswordCheckEmail:
+        'ദയവായി പാസ്‌വേഡ് റീസെറ്റ് നിർദ്ദേശങ്ങൾക്കായി നിങ്ങളുടെ ഇമെയിൽ പരിശോധിക്കുക. ലിങ്ക് 1 മണിക്കൂറിനുള്ളിൽ കാലഹരണപ്പെടും.',
+      resetPasswordError: 'റീസെറ്റ് ഇമെയിൽ അയയ്ക്കുന്നതിൽ പരാജയപ്പെട്ടു',
+      rememberPassword: 'നിങ്ങളുടെ പാസ്‌വേഡ് ഓർമ്മയുണ്ടോ?',
+      backToLogin: 'ലോഗിൻ‌ലേക്ക് തിരികെ പോകുക',
     },
   },
   bn: {
@@ -1257,6 +1342,15 @@ export const strings = {
       signUpError: 'সাইন আপ ব্যর্থ',
       otpSuccess: 'OTP সফলভাবে যাচাই করা হয়েছে',
       otpError: 'OTP যাচাইকরণ ব্যর্থ',
+      resetPasswordDescription:
+        'আপনার ইমেইল ঠিকানা লিখুন এবং আমরা আপনাকে পাসওয়ার্ড রিসেট করার জন্য একটি লিঙ্ক পাঠাব।',
+      sendResetLink: 'রিসেট লিঙ্ক পাঠান',
+      resetPasswordEmailSent: 'ইমেইল পাঠানো হয়েছে!',
+      resetPasswordCheckEmail:
+        'অনুগ্রহ করে পাসওয়ার্ড রিসেট নির্দেশাবলীর জন্য আপনার ইমেইল চেক করুন। লিঙ্কটি 1 ঘন্টার মধ্যে মেয়াদ শেষ হবে।',
+      resetPasswordError: 'রিসেট ইমেইল পাঠাতে ব্যর্থ',
+      rememberPassword: 'আপনার পাসওয়ার্ড মনে আছে?',
+      backToLogin: 'লগইনে ফিরে যান',
     },
   },
   pa: {
@@ -1390,6 +1484,15 @@ export const strings = {
       signUpError: 'ਸਾਇਨ ਅਪ ਅਸਫਲ',
       otpSuccess: 'OTP ਸਫਲਤਾਪੂਰਵਕ ਪੜਤਾਲ ਕੀਤਾ ਗਿਆ',
       otpError: 'OTP ਪੜਤਾਲ ਅਸਫਲ',
+      resetPasswordDescription:
+        'ਆਪਣਾ ਈਮੇਲ ਪਤਾ ਦਰਜ ਕਰੋ ਅਤੇ ਅਸੀਂ ਤੁਹਾਨੂੰ ਆਪਣਾ ਪਾਸਵਰਡ ਰੀਸੈਟ ਕਰਨ ਲਈ ਇੱਕ ਲਿੰਕ ਭੇਜਾਂਗੇ।',
+      sendResetLink: 'ਰੀਸੈਟ ਲਿੰਕ ਭੇਜੋ',
+      resetPasswordEmailSent: 'ਈਮੇਲ ਭੇਜਿਆ ਗਿਆ!',
+      resetPasswordCheckEmail:
+        'ਕਿਰਪਾ ਕਰਕੇ ਪਾਸਵਰਡ ਰੀਸੈਟ ਨਿਰਦੇਸ਼ਾਂ ਲਈ ਆਪਣਾ ਈਮੇਲ ਜਾਂਚੋ। ਲਿੰਕ 1 ਘੰਟੇ ਵਿੱਚ ਮਿਆਦ ਪੁੱਗ ਜਾਵੇਗੀ।',
+      resetPasswordError: 'ਰੀਸੈਟ ਈਮੇਲ ਭੇਜਣ ਵਿੱਚ ਅਸਫਲ',
+      rememberPassword: 'ਆਪਣਾ ਪਾਸਵਰਡ ਯਾਦ ਹੈ?',
+      backToLogin: 'ਲੌਗਇਨ ਤੇ ਵਾਪਸ ਜਾਓ',
     },
   },
 };

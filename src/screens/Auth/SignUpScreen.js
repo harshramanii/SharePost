@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -16,6 +17,7 @@ import { useLanguage } from '../../hooks/useLanguage';
 import { Button, Input } from '../../components';
 import { authService } from '../../services';
 import { showSuccess, showError } from '../../helper/toast';
+import { icons } from '../../helper/iconConstants';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -126,6 +128,13 @@ const SignUpScreen = () => {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.content}>
+          <View style={styles.logoContainer}>
+            <Image
+              source={icons.logo}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          </View>
           <Text style={[styles.title, { color: colors.text }]}>
             {strings.auth.signUp}
           </Text>
@@ -219,6 +228,15 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'center',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: hp(3),
+  },
+  logo: {
+    width: wp(24),
+    height: wp(24),
+    borderRadius: wp(24) * 0.04,
   },
   title: {
     fontSize: fontSize(32),

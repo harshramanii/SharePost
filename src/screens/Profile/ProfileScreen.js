@@ -70,6 +70,10 @@ const ProfileScreen = () => {
       const { data: sessionData } = await authService.getSession();
       if (!sessionData?.session) {
         setIsGuest(true);
+        // If routed here to open subscription modal, ignore it for guest
+        if (route.params?.openSubscriptionModal) {
+          navigation.setParams({ openSubscriptionModal: undefined });
+        }
         return;
       }
 
@@ -80,6 +84,12 @@ const ProfileScreen = () => {
         setShowEditModal(true);
         // Clear the param to prevent reopening on subsequent focuses
         navigation.setParams({ openEditModal: undefined });
+      }
+      // Check if we need to open subscription modal from navigation params
+      if (route.params?.openSubscriptionModal) {
+        setShowSubscriptionModal(true);
+        // Clear the param to prevent reopening on subsequent focuses
+        navigation.setParams({ openSubscriptionModal: undefined });
       }
     }, [dispatch, route.params, navigation]),
   );
@@ -122,27 +132,28 @@ const ProfileScreen = () => {
   }, [toggleTheme]);
 
   const handleFAQ = useCallback(() => {
-    // Navigate to FAQ screen
-    console.log('FAQ');
-  }, []);
+    navigation.navigate('Faq');
+  }, [navigation]);
 
   const handleTerms = useCallback(() => {
-    // Navigate to Terms screen
-    console.log('Terms');
-  }, []);
+    navigation.navigate('Terms');
+  }, [navigation]);
 
   const handlePrivacy = useCallback(() => {
-    // Navigate to Privacy screen
-    console.log('Privacy');
-  }, []);
+    navigation.navigate('PrivacyPolicy');
+  }, [navigation]);
 
   const handleContactSupport = useCallback(() => {
     setShowContactSupportModal(true);
   }, []);
 
   const handleSubscriptions = useCallback(() => {
+    if (isGuest) {
+      navigation.navigate('Login');
+      return;
+    }
     setShowSubscriptionModal(true);
-  }, []);
+  }, [isGuest, navigation]);
 
   const handleShareApp = useCallback(async () => {
     try {
@@ -152,7 +163,7 @@ const ProfileScreen = () => {
         Platform.OS === 'ios'
           ? `https://apps.apple.com/app/id${packageName}` // Replace with actual App Store ID
           : `https://play.google.com/store/apps/details?id=${packageName}`;
-      
+
       const shareOptions = {
         message: `Check out SharePost app! Download it from: ${appStoreUrl}`,
         url: appStoreUrl,
@@ -429,18 +440,23 @@ const ProfileScreen = () => {
               strings.profile.privacy,
               handlePrivacy,
             )}
+            {!isGuest &&
+              renderOptionItem(
+                'settings',
+                strings.profile.subscriptions,
+                handleSubscriptions,
+                true,
+                subscriptionStatus?.status === 'active' ? (
+                  <View style={styles.subscriptionBadge}>
+                    <Text style={styles.subscriptionBadgeText}>Active</Text>
+                  </View>
+                ) : null,
+              )}
             {renderOptionItem(
-              'settings',
-              strings.profile.subscriptions,
-              handleSubscriptions,
-              true,
-              subscriptionStatus?.status === 'active' ? (
-                <View style={styles.subscriptionBadge}>
-                  <Text style={styles.subscriptionBadgeText}>Active</Text>
-                </View>
-              ) : null,
+              'share',
+              strings.profile.shareApp,
+              handleShareApp,
             )}
-            {renderOptionItem('share', strings.profile.shareApp, handleShareApp)}
             {renderOptionItem('alert', 'Contact Support', handleContactSupport)}
             {!isGuest &&
               renderOptionItem(
@@ -497,10 +513,12 @@ const ProfileScreen = () => {
         onClose={() => setShowContactSupportModal(false)}
       />
 
-      <SubscriptionModal
-        visible={showSubscriptionModal}
-        onClose={() => setShowSubscriptionModal(false)}
-      />
+      {!isGuest && (
+        <SubscriptionModal
+          visible={showSubscriptionModal}
+          onClose={() => setShowSubscriptionModal(false)}
+        />
+      )}
     </SafeAreaView>
   );
 };

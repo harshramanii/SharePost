@@ -57,6 +57,24 @@ const Icon = memo(({ name, size = 24, color = colors.primary, style }) => {
             />
           </Svg>
         );
+      case 'chevronDown':
+        return (
+          <Svg {...iconProps} style={style}>
+            <Path
+              d="M7.41 8.59L12 13.17L16.59 8.59L18 10L12 16L6 10L7.41 8.59Z"
+              fill={color}
+            />
+          </Svg>
+        );
+      case 'chevronUp':
+        return (
+          <Svg {...iconProps} style={style}>
+            <Path
+              d="M7.41 15.41L12 10.83L16.59 15.41L18 14L12 8L6 14L7.41 15.41Z"
+              fill={color}
+            />
+          </Svg>
+        );
       case 'close':
         return (
           <Svg {...iconProps} style={style}>
@@ -308,6 +326,16 @@ const Icon = memo(({ name, size = 24, color = colors.primary, style }) => {
         return (
           <Svg {...iconProps} style={style}>
             <Path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill={color} />
+          </Svg>
+        );
+      case 'video':
+      case 'play':
+        return (
+          <Svg {...iconProps} style={style}>
+            <Path
+              d="M8 5V19L19 12L8 5ZM6 3C5.45 3 5 3.45 5 4V20C5 20.55 5.45 21 6 21C6.28 21 6.55 20.89 6.75 20.7L20.25 12.7C20.58 12.42 20.75 12.21 20.75 12C20.75 11.79 20.58 11.58 20.25 11.3L6.75 3.3C6.55 3.11 6.28 3 6 3Z"
+              fill={color}
+            />
           </Svg>
         );
       default:

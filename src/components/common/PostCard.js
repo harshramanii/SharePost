@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -22,7 +22,9 @@ import { fontFamily, fontSize } from '../../helper/utils';
 import { useTheme } from '../../hooks/useTheme';
 import { useLanguage } from '../../hooks/useLanguage';
 import { showSuccess, showError } from '../../helper/toast';
+import { subscriptionService } from '../../services';
 import Icon from './Icon';
+import DownloadShareModal from './DownloadShareModal';
 
 const PostCard = ({ post, onDownload, onEdit, onShare }) => {
   const navigation = useNavigation();
@@ -30,6 +32,28 @@ const PostCard = ({ post, onDownload, onEdit, onShare }) => {
   const { colors } = useTheme();
   const { strings } = useLanguage();
   const { profile: userProfile } = useSelector(state => state.user);
+  const [showDownloadShareModal, setShowDownloadShareModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null); // 'download' or 'share'
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [checkingSubscription, setCheckingSubscription] = useState(false);
+
+  // Check subscription status on mount
+  useEffect(() => {
+    checkSubscriptionStatus();
+  }, []);
+
+  const checkSubscriptionStatus = useCallback(async () => {
+    try {
+      setCheckingSubscription(true);
+      const hasSubscription = await subscriptionService.hasActiveSubscription();
+      setHasActiveSubscription(hasSubscription);
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+      setHasActiveSubscription(false);
+    } finally {
+      setCheckingSubscription(false);
+    }
+  }, []);
 
   const requestStoragePermission = useCallback(async () => {
     if (Platform.OS === 'android') {
@@ -117,8 +141,13 @@ const PostCard = ({ post, onDownload, onEdit, onShare }) => {
   }, [post, onShare]);
 
   const handleDownload = useCallback(() => {
-    captureAndDownload();
-  }, [captureAndDownload]);
+    if (hasActiveSubscription) {
+      captureAndDownload();
+    } else {
+      setPendingAction('download');
+      setShowDownloadShareModal(true);
+    }
+  }, [hasActiveSubscription, captureAndDownload]);
 
   const handleEdit = useCallback(() => {
     navigation.navigate('Profile', { openEditModal: true });
@@ -126,8 +155,28 @@ const PostCard = ({ post, onDownload, onEdit, onShare }) => {
   }, [post, onEdit, navigation]);
 
   const handleShare = useCallback(() => {
-    captureAndShare();
-  }, [captureAndShare]);
+    if (hasActiveSubscription) {
+      captureAndShare();
+    } else {
+      setPendingAction('share');
+      setShowDownloadShareModal(true);
+    }
+  }, [hasActiveSubscription, captureAndShare]);
+
+  const handleModalClose = useCallback(() => {
+    setShowDownloadShareModal(false);
+    setPendingAction(null);
+  }, []);
+
+  const handleAfterViewAds = useCallback(() => {
+    // After viewing ads, allow the action
+    if (pendingAction === 'download') {
+      captureAndDownload();
+    } else if (pendingAction === 'share') {
+      captureAndShare();
+    }
+    handleModalClose();
+  }, [pendingAction, captureAndDownload, captureAndShare, handleModalClose]);
 
   const handleSocialLink = useCallback(async (url, type) => {
     if (!url || url.trim() === '') return;
@@ -308,7 +357,7 @@ const PostCard = ({ post, onDownload, onEdit, onShare }) => {
           accessibilityLabel={strings.home.download}
           accessibilityRole="button"
         >
-          <Icon name="download" size={wp(6)} color={colors.primary} />
+          <Icon name="download" size={wp(5)} color={colors.primary} />
           <Text
             style={[styles.actionLabel, { color: colors.text }]}
             numberOfLines={1}
@@ -324,7 +373,7 @@ const PostCard = ({ post, onDownload, onEdit, onShare }) => {
           accessibilityLabel={strings.home.edit}
           accessibilityRole="button"
         >
-          <Icon name="edit" size={wp(6)} color={colors.primary} />
+          <Icon name="edit" size={wp(5)} color={colors.primary} />
           <Text
             style={[styles.actionLabel, { color: colors.text }]}
             numberOfLines={1}
@@ -340,7 +389,7 @@ const PostCard = ({ post, onDownload, onEdit, onShare }) => {
           accessibilityLabel={strings.common.share}
           accessibilityRole="button"
         >
-          <Icon name="share" size={wp(6)} color={colors.primary} />
+          <Icon name="share" size={wp(5)} color={colors.primary} />
           <Text
             style={[styles.actionLabel, { color: colors.text }]}
             numberOfLines={1}
@@ -349,6 +398,13 @@ const PostCard = ({ post, onDownload, onEdit, onShare }) => {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <DownloadShareModal
+        visible={showDownloadShareModal}
+        onClose={handleModalClose}
+        actionType={pendingAction || 'download'}
+        onAdWatched={handleAfterViewAds}
+      />
     </View>
   );
 };
@@ -441,7 +497,7 @@ const styles = StyleSheet.create({
     gap: wp(1.5),
   },
   actionLabel: {
-    fontSize: fontSize(14),
+    fontSize: fontSize(12),
     fontFamily: fontFamily.bold,
     flex: 1,
   },

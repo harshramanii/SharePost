@@ -95,6 +95,49 @@ export const samplePosts = [
   },
 ];
 
+export const faqQuestions = [
+  {
+    id: 1,
+    question: 'How do I create a post?',
+    answer: 'To create a post, go to the Create tab, choose between image or text background, customize your post with colors and fonts, and then download or share it.',
+  },
+  {
+    id: 2,
+    question: 'Can I use my own photos?',
+    answer: 'Yes! You can upload your own photos from your gallery or take a new photo using the camera option when creating a post.',
+  },
+  {
+    id: 3,
+    question: 'How do I download a post?',
+    answer: 'Click on the download button below any post. If you have an active subscription, it will download directly. Otherwise, you can watch an ad or purchase a subscription.',
+  },
+  {
+    id: 4,
+    question: 'What is a subscription?',
+    answer: 'A subscription gives you unlimited downloads and shares without watching ads. You can choose between monthly or yearly plans.',
+  },
+  {
+    id: 5,
+    question: 'How do I restore my purchase?',
+    answer: 'Go to Profile > Subscriptions and tap "Restore Purchase" to restore your subscription if you\'ve purchased it on another device.',
+  },
+  {
+    id: 6,
+    question: 'Can I edit my profile?',
+    answer: 'Yes! Go to Profile screen and tap the edit icon. You can update your name, bio, phone number, and social media links.',
+  },
+  {
+    id: 7,
+    question: 'How do I share posts?',
+    answer: 'Click the share button below any post. You can share directly to social media platforms or save to your device.',
+  },
+  {
+    id: 8,
+    question: 'Is my data secure?',
+    answer: 'Yes, we take your privacy seriously. All your data is encrypted and stored securely. Please read our Privacy Policy for more details.',
+  },
+];
+
 export const languages = [
   {
     id: 1,
